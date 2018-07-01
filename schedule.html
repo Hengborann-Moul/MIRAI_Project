@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Schedule2</title>
+    <link rel="stylesheet" href="schedule.css">
+</head>
+
+<body>
+
+    <div class="table-container">
+        <ul class="tabs">
+            <li class="eventOn15th">
+                <input type="radio" name="tabs" id="tab1" checked>
+                <label for="tab1">September
+                    <span>15</span>
+                </label>
+                <div id="tab-content1" class="tab-content dragscroll">
+                    <div class="schedule-wrapper">
+                        
+                    </div>
+                </div>
+            </li>
+            <li class="eventOn16th">
+                <input type="radio" name="tabs" id="tab2">
+                <label for="tab2">September
+                    <span>16</span>
+                </label>
+                <div id="tab-content2" class="tab-content dragscroll">
+                    <div class="schedule-wrapper">
+                        
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="cover-layer">
+            <div class="event-modal">
+                <header class="header">
+                    <div class="content">
+                        <span class="date"></span>
+                        <h3 class="name"></h3>
+                    </div>
+    
+                    <div class="header-bg"></div>
+                </header>
+    
+                <div class="body">
+                    <div class="info">Description:</div>
+                    <div class="body-bg"></div>
+                </div>
+    
+                <span class="close">X</span>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/asvd/dragscroll/master/dragscroll.js"></script>
+    <script src="unicode-hack.js"></script>
+    <script src="schedule.js"></script>
+</body>
+
+</html>
