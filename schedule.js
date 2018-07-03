@@ -28,19 +28,21 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         eventOn15th: [],
                         eventOn16th: []
                     };
+                var list_date_event =[]
                 var regex = unicode_hack(/\p{N}/g);
-                let list_time_start = []
-                let list_time_end = []
+                let list_time_start = [], list_time_start_15 = [], list_time_start_16 = [];
+                let list_time_end = [], list_time_end_15 = [], list_time_end_16 = [];
                 let html_border =""
                 let count=0;
+                console.log(events)
                 timetables.map(function(ele, index){
+
                     var startTime = moment(ele.start).format('HH:mm'),
                         endTime = moment(ele.end).format('HH:mm'),
                         startDate = moment(ele.start).format('DD'),
                         endDate = moment(ele.end).format('DD'),
                         locationName = ele.location,
                         locationCol = $(`li.eventOn${startDate}th .table-flex[data-location="${locationName}"]`);
-
 
                     if(!locationCol.length) {
 
@@ -108,30 +110,58 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     });
                     list_time_start.push(parseInt(ele.startTime.split(':')[0]))
                     list_time_end.push(parseInt(ele.endTime.split(':')[0]))
+                    if(endDate === "15"){
+                        list_time_end_15.push(ele.endTime.split(':')[0]);
+                        list_time_start_15.push(ele.startTime.split(':')[0]);
+                    }else{
+                        list_time_end_16.push(ele.endTime.split(':')[0]);
+                        list_time_start_16.push(ele.startTime.split(':')[0])
+                    }
                     events[`eventOn${startDate}th`].push(ele);
                 });
 
-                for (var i = 15; i <= 16; i++) {
-                    for (var j = Math.min(...list_time_start); j <= Math.max(...list_time_end); j++) {
+
+                    for (var j = Math.min(...list_time_start_15); j <= Math.max(...list_time_end_15); j++) {
                         var timelineElement = func.timelineElementTemplate.format(
                             j + ':00',
                         );
                         timelineElement = $.parseHTML(timelineElement);
-                        $(`li.eventOn${i}th .time-line-item`).append(timelineElement);
+                        $(`li.eventOn${15}th .time-line-item`).append(timelineElement);
                     }
-                }
+                    for (var j = Math.min(...list_time_start_16); j <= Math.max(...list_time_end_16); j++) {
+                        var timelineElement = func.timelineElementTemplate.format(
+                            j + ':00',
+                        );
+                        timelineElement = $.parseHTML(timelineElement);
+                        $(`li.eventOn${16}th .time-line-item`).append(timelineElement);
+                    }
 
 
 
-                for(var i=Math.min(...list_time_start);i<=Math.max(...list_time_end);i++){
-                    var background_border = func.backgroundBorderTemplate.format(
-                    )
-                    html_border = html_border + background_border;
-                }
-                for(var k = 0 ;k <count;k++){
-                    $('.background-border').append("<div style='width: 250px'>"+html_border+"</div>")
 
-                }
+
+
+                    for(var i=Math.min(...list_time_start_15);i<=Math.max(...list_time_end_15);i++){
+                        var background_border = func.backgroundBorderTemplate.format(
+                        )
+                        html_border = html_border + background_border;
+                    }
+                    for(var k = 0 ;k <count;k++){
+                        $('.border'+15).append("<div style='width: 250px'>"+html_border+"</div>")
+
+                    }
+                    html_border=""
+                    for(var i=Math.min(...list_time_start_16);i<=Math.max(...list_time_end_16);i++){
+                        var background_border = func.backgroundBorderTemplate.format(
+                        )
+                        html_border = html_border + background_border;
+                    }
+                    for(var k = 0 ;k <count;k++){
+                        $('.border'+16).append("<div style='width: 250px'>"+html_border+"</div>")
+
+                    }
+
+
                 MIRAI.main.sortBy('data-building-number', '.location-headers', '.table-flex', 'asc', 'data-room-number');
                 MIRAI.main.sortBy('data-building-number', '.card-events', '.table-flex', 'asc', 'data-room-number')
                 MIRAI.main.sortBy('data-time-order', '.location-events', '.eventRecordObject', 'asc');
@@ -146,24 +176,21 @@ if(!MIRAI.main) {MIRAI.main = {};}
 
     func.arrangeEvents = function (sel, elem,list_time) {
         var selector1 = $(sel);
-        var timeUnitPx = 120;
+        var timeUnitPx = 90;
+
         selector1.each(function (index, sel) {
             var $element = $(sel).children(elem);
             var end_time_temp= Math.min(...list_time);
-            $element.map((obj,index)=>{
+
+            $element.map((obj)=>{
                 if (obj === 0){
-                    // console.log(typeof ($element[obj].attributes[3].value));
-                    // console.log(moment.duration($element[obj].attributes[3].value));
+
                     var startTimeDec = moment.duration($($element[obj]).attr("data-starttime")).asHours();
                     var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
                     var margin =(startTimeDec - Math.min(...list_time)) * timeUnitPx;
                     var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
-                    /*console.log("start time: "+$($element[obj]).attr("data-starttime"))
-                    console.log("end time: "+$($element[obj]).attr("data-endtime"))
-                    console.log("temp: "+ end_time_temp)
-                    console.log("margin: "+margin)
-                    console.log("height: "+height)
-                    $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});*/
+
+                    $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                     end_time_temp = endTimeDec;
                 }
                 else{
@@ -176,8 +203,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                 }
             })
-            console.log("----------------------------------")
         });
+
     };
 
     func.convertNumbers2English = function (string) {
@@ -317,7 +344,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
         </div>
     </div>`;
 
-    func.backgroundBorderTemplate = `<div style="height: 119px;width: 249px; display: flex;flex-direction: row;
+    func.backgroundBorderTemplate = `<div style="height: 89px;width: 249px; display: flex;flex-direction: row;
         border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`
 
     func.backgroundBorderHeigTemplate = `
