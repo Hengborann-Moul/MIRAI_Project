@@ -21,15 +21,16 @@ if(!MIRAI.main) {MIRAI.main = {};}
             type: 'GET',
             dataType: 'json',
             success: function(res) {
+                var list_location=[]
                 var response = JSON.parse(JSON.stringify(res)),
                     timetables = response.event_dates[0].timetables,
                     events = {
                         eventOn15th: [],
                         eventOn16th: []
                     };
-                console.log(timetables)
-                var regex = unicode_hack(/\p{N}/g),
-                timeline = new Set();
+                var regex = unicode_hack(/\p{N}/g);
+                let list_time_start = []
+                let list_time_end = []
                 let html_border =""
                 let count=0;
                 timetables.map(function(ele, index){
@@ -65,12 +66,14 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         renderedLocationHTML = $.parseHTML(renderedLocationHTML);
                         $(`li.eventOn${startDate}th .card-events`).append(renderedLocationHTML);
 
-                        if(locationName.hasOwnProperty()){
-                            console.log(count++)
-                        }
                         var location_header = func.locationHeaderTemplate.format(
                             locationName, locationNumbers, roomNumber
                         );
+                        if(!list_location.hasOwnProperty(locationName)){
+
+                            list_location[locationName] = count
+                            count++
+                        }
 
                         location_header = $.parseHTML(location_header);
                         $(`li.eventOn${startDate}th .location-headers`).append(location_header);
@@ -103,25 +106,29 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         startTime: startTime,
                         endTime: endTime
                     });
+                    list_time_start.push(parseInt(ele.startTime.split(':')[0]))
+                    list_time_end.push(parseInt(ele.endTime.split(':')[0]))
                     events[`eventOn${startDate}th`].push(ele);
                 });
+
                 for (var i = 15; i <= 16; i++) {
-                    for (var j = 7; j <= 17; j++) {
+                    for (var j = Math.min(...list_time_start); j <= Math.max(...list_time_end); j++) {
                         var timelineElement = func.timelineElementTemplate.format(
-                            j,
+                            j + ':00',
                         );
                         timelineElement = $.parseHTML(timelineElement);
                         $(`li.eventOn${i}th .time-line-item`).append(timelineElement);
                     }
                 }
-                let full_background =""
 
-                for(var i=0;i<11;i++){
+
+
+                for(var i=Math.min(...list_time_start);i<=Math.max(...list_time_end);i++){
                     var background_border = func.backgroundBorderTemplate.format(
                     )
                     html_border = html_border + background_border;
                 }
-                for(var k = 0 ;k <=14;k++){
+                for(var k = 0 ;k <count;k++){
                     $('.background-border').append("<div style='width: 250px'>"+html_border+"</div>")
 
                 }
@@ -129,7 +136,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 MIRAI.main.sortBy('data-building-number', '.card-events', '.table-flex', 'asc', 'data-room-number')
                 MIRAI.main.sortBy('data-time-order', '.location-events', '.eventRecordObject', 'asc');
                 MIRAI.main.setTimelineParentHeight();
-                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject');
+                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start);
             },
             error: function(error) {
                 console.log(error);
@@ -137,38 +144,39 @@ if(!MIRAI.main) {MIRAI.main = {};}
         })
     }
 
-    func.arrangeEvents = function (sel, elem) {
+    func.arrangeEvents = function (sel, elem,list_time) {
         var selector1 = $(sel);
-        console.log(selector1);
-        var timeUnitPx = 200;
+        var timeUnitPx = 120;
         selector1.each(function (index, sel) {
             var $element = $(sel).children(elem);
-            console.log($element);
-            var end_time_temp="";
+            var end_time_temp= Math.min(...list_time);
             $element.map((obj,index)=>{
                 if (obj === 0){
                     // console.log(typeof ($element[obj].attributes[3].value));
                     // console.log(moment.duration($element[obj].attributes[3].value));
-
-                    var startTimeDec = moment.duration($element[obj].attributes[4].value).asHours();
-                    var endTimeDec = moment.duration($element[obj].attributes[5].value).asHours();
-                    var margin = (startTimeDec - 7) * timeUnitPx;
-                    var height = (endTimeDec - startTimeDec) * timeUnitPx;
-                    $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
-                    console.log(startTimeDec);
+                    var startTimeDec = moment.duration($($element[obj]).attr("data-starttime")).asHours();
+                    var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
+                    var margin =(startTimeDec - Math.min(...list_time)) * timeUnitPx;
+                    var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
+                    /*console.log("start time: "+$($element[obj]).attr("data-starttime"))
+                    console.log("end time: "+$($element[obj]).attr("data-endtime"))
+                    console.log("temp: "+ end_time_temp)
+                    console.log("margin: "+margin)
+                    console.log("height: "+height)
+                    $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});*/
                     end_time_temp = endTimeDec;
-                    console.log(margin);
                 }
                 else{
-                    var startTimeDec = moment.duration($element[obj].attributes[4].value).asHours();
-                    var endTimeDec = moment.duration($element[obj].attributes[5].value).asHours();
+                    var startTimeDec = moment.duration($($element[obj]).attr("data-starttime")).asHours();
+                    var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
                     var margin = (startTimeDec - end_time_temp) * timeUnitPx;
-                    var height = (endTimeDec - startTimeDec) * timeUnitPx;
+                    var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
+
                     end_time_temp = endTimeDec
-                    console.log(margin);
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                 }
             })
+            console.log("----------------------------------")
         });
     };
 
@@ -309,8 +317,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
         </div>
     </div>`;
 
-    func.backgroundBorderTemplate = `<div style="height: 200px;width: 249px; display: flex;flex-direction: row;
-        border: 1px solid gray;border-right:0px;border-top:0px"></div>`
+    func.backgroundBorderTemplate = `<div style="height: 119px;width: 249px; display: flex;flex-direction: row;
+        border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`
 
     func.backgroundBorderHeigTemplate = `
 
@@ -359,40 +367,33 @@ $(document).ready(function() {
     var timeout;
 
     $('.time, .schedule').on("scroll", function callback() {
-        // clear the 'timeout' every 'scroll' event call
-        // to prevent re-assign 'scroll' event to other element
-        // before finished scrolling
+
         clearTimeout(timeout);
 
         // get the used elements
         var source = $(this),
             target = $(source.is(".time") ? '.schedule' : '.time');
 
-        // remove the callback from the other 'div' and set the 'scrollTop'
+
         target.off("scroll").scrollTop(source.scrollTop());
-        var border = $(".scroll-border")
-        // create a new 'timeout' and reassign 'scroll' event
-        // to other 'div' on 100ms after the last event call
+
         timeout = setTimeout(function() {
             target.on("scroll", callback);
         }, 100);
     });
     $('.scroll_time, .schedule').on("scroll", function() {
         var scrollT = $(this).scrollTop();
-        let top = document.querySelector('.scroll_time').scrollHeight
-
             $('.scroll-border').scrollTop( scrollT );
-
-
-
-
     })
     $('.horizontal_scroll_border').on("scroll", function() {
         var scrollL = $(this).scrollLeft()
         $('.scroll-border').scrollLeft( scrollL );
     })
     const width = (window.outerWidth-16) + "px"
-    $('.background-border').css({'width':"calc( "+width+" - 5%)","margin-left":"calc(5%)"})
-
+    $('.background-border').css({"resize": "both",'width':"calc( "+width+" - 5%)","margin-left":"5%"})
+    $( window ).resize(function() {
+        const width = (window.outerWidth-16) + "px"
+        $('.background-border').css({"resize": "both",'width':"calc( "+width+" - 5%)","margin-left":"5%"})
+    })
 
 });
