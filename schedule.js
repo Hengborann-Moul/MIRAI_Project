@@ -34,7 +34,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 let list_time_end = [], list_time_end_15 = [], list_time_end_16 = [];
                 let html_border =""
                 let count=0;
-                console.log(events)
+                var pre_locationName = undefined, pre_eventName = undefined, pre_startTime = undefined;
                 timetables.map(function(ele, index){
 
                     var startTime = moment(ele.start).format('HH:mm'),
@@ -110,7 +110,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     });
                     list_time_start.push(parseInt(ele.startTime.split(':')[0]))
                     list_time_end.push(parseInt(ele.endTime.split(':')[0]))
-                    if(endDate === "15"){
+                    if(startDate === "15"){
                         list_time_end_15.push(ele.endTime.split(':')[0]);
                         list_time_start_15.push(ele.startTime.split(':')[0]);
                     }else{
@@ -120,46 +120,35 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     events[`eventOn${startDate}th`].push(ele);
                 });
 
+                for (var j = Math.min(...list_time_start_15); j <= Math.max(...list_time_end_15); j++) {
+                    var timelineElement = func.timelineElementTemplate.format(
+                        j + ':00',
+                    );
+                    var background_border = func.backgroundBorderTemplate.format()
+                    html_border = html_border + background_border;
+                    timelineElement = $.parseHTML(timelineElement);
+                    $(`li.eventOn${15}th .time-line-item`).append(timelineElement);
+                }
 
-                    for (var j = Math.min(...list_time_start_15); j <= Math.max(...list_time_end_15); j++) {
-                        var timelineElement = func.timelineElementTemplate.format(
-                            j + ':00',
-                        );
-                        timelineElement = $.parseHTML(timelineElement);
-                        $(`li.eventOn${15}th .time-line-item`).append(timelineElement);
-                    }
-                    for (var j = Math.min(...list_time_start_16); j <= Math.max(...list_time_end_16); j++) {
-                        var timelineElement = func.timelineElementTemplate.format(
-                            j + ':00',
-                        );
-                        timelineElement = $.parseHTML(timelineElement);
-                        $(`li.eventOn${16}th .time-line-item`).append(timelineElement);
-                    }
+                for(var k = 0 ; k < count ; k++){
+                    $('.border'+15).append("<div style='width: 250px'>"+html_border+"</div>");
+                }
 
+                html_border="";
 
+                for (var j = Math.min(...list_time_start_16); j <= Math.max(...list_time_end_16); j++) {
+                    var timelineElement = func.timelineElementTemplate.format(
+                        j + ':00',
+                    );
+                    var background_border = func.backgroundBorderTemplate.format()
+                    html_border = html_border + background_border;
+                    timelineElement = $.parseHTML(timelineElement);
+                    $(`li.eventOn${16}th .time-line-item`).append(timelineElement);  
+                }
 
-
-
-
-                    for(var i=Math.min(...list_time_start_15);i<=Math.max(...list_time_end_15);i++){
-                        var background_border = func.backgroundBorderTemplate.format(
-                        )
-                        html_border = html_border + background_border;
-                    }
-                    for(var k = 0 ;k <count;k++){
-                        $('.border'+15).append("<div style='width: 250px'>"+html_border+"</div>")
-
-                    }
-                    html_border=""
-                    for(var i=Math.min(...list_time_start_16);i<=Math.max(...list_time_end_16);i++){
-                        var background_border = func.backgroundBorderTemplate.format(
-                        )
-                        html_border = html_border + background_border;
-                    }
-                    for(var k = 0 ;k <count;k++){
-                        $('.border'+16).append("<div style='width: 250px'>"+html_border+"</div>")
-
-                    }
+                for(var k = 0 ; k < count ; k++){
+                    $('.border'+16).append("<div style='width: 250px'>"+html_border+"</div>");
+                }
 
 
                 MIRAI.main.sortBy('data-building-number', '.location-headers', '.table-flex', 'asc', 'data-room-number');
@@ -167,6 +156,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 MIRAI.main.sortBy('data-time-order', '.location-events', '.eventRecordObject', 'asc');
                 MIRAI.main.setTimelineParentHeight();
                 MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start);
+                MIRAI.main.arrangeStartTime();
             },
             error: function(error) {
                 console.log(error);
@@ -204,8 +194,24 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 }
             })
         });
-
     };
+
+    func.arrangeStartTime = function () {
+        $(".card-events .table-flex.event-card .location-events").each(function(index, elem){
+            var rootElem = $(elem).children();
+            var startTime = undefined;
+            var crush = undefined;
+            rootElem.map(function(child_index, child_elem) {
+                if($(child_elem).attr("data-starttime") === startTime){
+                    $(elem).css({"display": "flex"});
+                    $(child_elem).css({"margin-top": $(crush).css("margin-top")});
+                }else{
+                    startTime = $(child_elem).attr("data-starttime");
+                    crush = child_elem;
+                }
+            });
+        });
+    }
 
     func.convertNumbers2English = function (string) {
         return string.replace(/[\u0660-\u0669]/g, function (c) {
@@ -284,6 +290,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     if (an > bn)
                     return -1;
                 }
+
                 if(args) {
                     var ann = parseInt(a.getAttribute(args)),
                         bnn = parseInt(b.getAttribute(args));
@@ -345,11 +352,10 @@ if(!MIRAI.main) {MIRAI.main = {};}
     </div>`;
 
     func.backgroundBorderTemplate = `<div style="height: 89px;width: 249px; display: flex;flex-direction: row;
-        border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`
+        border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`;
 
     func.backgroundBorderHeigTemplate = `
-
-        <div style="height:200px;width: 250px; display: flex;flex-direction: row;border: 1px solid black">{0}</div>`
+        <div style="height:200px;width: 250px; display: flex;flex-direction: row;border: 1px solid black">{0}</div>`;
 
 
     func.locationEventTemplate = `
@@ -360,9 +366,25 @@ if(!MIRAI.main) {MIRAI.main = {};}
      data-endTime="{3}" 
      data-description="{4}"
      data-time-order="{5}">
-      <p class="time" data-time="">{1}</p>
-       <br/><h4 class="name-event">{0}</h4>
-   </div>`
+        <p class="time" data-time="">{1}</p>
+        <br/>
+        <h4 class="name-event">{0}</h4>
+    </div>`;
+
+    func.specialLocationEventTemplate = `
+        <div class="col-child eventRecordObject" style="margin-top: {6}px; height: {7}px;"
+         data-name="{0}" 
+         data-time="{1}" 
+         data-startTime="{2}" 
+         data-endTime="{3}" 
+         data-description="{4}"
+         data-time-order="{5}">
+            <p class="time" data-time="">{1}</p>
+            <h4 class="special-name-event">{8}</h4>
+            <br/>
+            <h4 class="name-event">{0}</h4>
+        </div>
+    `;
 
 })(jQuery);
 

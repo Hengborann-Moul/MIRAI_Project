@@ -88,6 +88,7 @@
  .schedule-wrapper {
      float: right;
      width: 95%;
+     height: 525.5px;
      overflow-x: scroll;
      cursor: -webkit-grab;
      cursor: grab;
@@ -144,6 +145,7 @@ body.showModal {
  }
  .col-child{
      background: #a4c2f4;
+     overflow: hidden;
      padding: 10px 15px;
      -webkit-box-shadow: 0px 2px 5px 0px rgba(189,189,189,1);
      -moz-box-shadow: 0px 2px 5px 0px rgba(189,189,189,1);
@@ -248,7 +250,7 @@ body.showModal {
     cursor: grab;
     cursor : -o-grab;
     cursor : -moz-grab;
-    height: 324.5px;
+    height: 450px;
     overflow-x: hidden;
 }
 
@@ -263,13 +265,13 @@ body.showModal {
 .time-line{
     width: calc(5% - 1px);
     background-color: #bfbff2;
-    height:400px;
+    height:525.5px;
     border-right: 0.5px solid #ebebeb;
     float: left;
 }
 .time-line-item{
     overflow-y: auto;
-    height: 324.5px
+    height: 450px
 }
 .time-line-title{
     height: 75.5px;
@@ -283,10 +285,8 @@ body.showModal {
     color:white;
 }
 .wrapper-event{
-
-   float: right;
+    float: right;
     width: 95%;
-
     overflow-x: scroll
 }
 .timeline-element{
@@ -324,7 +324,7 @@ html::-webkit-scrollbar,.time-line-item.time::-webkit-scrollbar,
 .scroll-border{
     -ms-overflow-style: none;
     position: absolute;z-index: -1;
-    height: 324.5px;
+    height: 450px;
     margin-top: 75.5px;
     display:-webkit-inline-box;
     flex-direction: row;overflow-y: scroll
