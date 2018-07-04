@@ -156,9 +156,9 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 MIRAI.main.sortBy('data-building-number', '.card-events', '.table-flex', 'asc', 'data-room-number')
                 MIRAI.main.sortBy('data-time-order', '.location-events', '.eventRecordObject', 'asc');
                 MIRAI.main.setTimelineParentHeight();
-                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start,
-                    list_time_end_15,list_time_end_16);
+                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start, list_time_end_15, list_time_end_16);
                 MIRAI.main.arrangeStartTime();
+                MIRAI.main.handleSmallHeight();
             },
             error: function(error) {
                 console.log(error);
@@ -185,12 +185,10 @@ if(!MIRAI.main) {MIRAI.main = {};}
 
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                     end_time_temp = endTimeDec;
-                    console.log($($element[obj]).attr("data-start-date"))
                     if($($element[obj]).attr("data-start-date") === "15"){
                         if(parseInt(endTimeDec) === max_time_end_15){
                             var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2
                             $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
-
                         }
 
                     }
@@ -199,7 +197,6 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         {
                             var margin_bottom = ((max_time_end_16 + 1) - endTimeDec) * timeUnitPx+2
                             $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
-
                         }
                     }
                 }
@@ -208,21 +205,17 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
                     var margin = (startTimeDec - end_time_temp) * timeUnitPx;
                     var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
-                    console.log($($element[obj]).attr("data-start-date"))
                     if($($element[obj]).attr("data-start-date") === "15"){
                         if(parseInt(endTimeDec) === max_time_end_15){
-                            var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2
-                            console.log(margin_bottom)
+                            var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2;
                             $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
 
                         }
-
                     }
                     else {
                         if(parseInt(endTimeDec) === max_time_end_16)
                         {
-                            var margin_bottom = ((max_time_end_16 + 1) - endTimeDec) * timeUnitPx+2
-                            console.log(margin_bottom)
+                            var margin_bottom = ((max_time_end_16 + 1) - endTimeDec) * timeUnitPx+2;
                             $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
 
                         }
@@ -233,6 +226,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
             })
         });
     };
+
+    /* Check Duplicate Start time on the same day */
 
     func.arrangeStartTime = function () {
         $(".card-events .table-flex.event-card .location-events").each(function(index, elem){
@@ -246,6 +241,20 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 }else{
                     startTime = $(child_elem).attr("data-starttime");
                     crush = child_elem;
+                }
+            });
+        });
+    }
+
+    /* set margin on time smaller than 0.5 */
+    func.handleSmallHeight = function (){
+        $(".card-events .table-flex.event-card .location-events").each(function(index, elem){
+            var rootElem = $(elem).children();
+            rootElem.map(function(child_index, child_elem) {
+                var startTime = moment.duration($(child_elem).attr("data-starttime")).asHours();
+                var endTime = moment.duration($(child_elem).attr("data-endtime")).asHours();
+                if((endTime - startTime) <= 0.5){
+                    $(child_elem).children("h4").css({"margin-top": "-0.1rem"});
                 }
             });
         });
