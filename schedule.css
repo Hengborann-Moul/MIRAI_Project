@@ -330,5 +330,24 @@ html::-webkit-scrollbar,.time-line-item.time::-webkit-scrollbar,
     flex-direction: row;overflow-y: scroll
 }
 
+.short-time h4{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: -5px;
+}
+.short-time p{
+    display: inline;
+}
+.short-time{
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+.line-limit h4{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
 
 
