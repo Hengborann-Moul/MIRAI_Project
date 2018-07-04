@@ -290,7 +290,7 @@ body.showModal {
     overflow-x: scroll
 }
 .timeline-element{
-    height: 89px;
+    height: 179px;
     display: flex;
     justify-content: center;
     align-items: center;

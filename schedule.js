@@ -97,7 +97,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         String(ele.description).replace(/"/g, "&quot;"),
                         orderTime,
                         margin,
-                        height
+                        height,
+                        startDate
                     );
                     renderedEventHTML = $.parseHTML(renderedEventHTML);
                     $(renderedEventHTML).on('click', func.showModal);
@@ -143,7 +144,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     var background_border = func.backgroundBorderTemplate.format()
                     html_border = html_border + background_border;
                     timelineElement = $.parseHTML(timelineElement);
-                    $(`li.eventOn${16}th .time-line-item`).append(timelineElement);  
+                    $(`li.eventOn${16}th .time-line-item`).append(timelineElement);
                 }
 
                 for(var k = 0 ; k < count ; k++){
@@ -155,7 +156,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                 MIRAI.main.sortBy('data-building-number', '.card-events', '.table-flex', 'asc', 'data-room-number')
                 MIRAI.main.sortBy('data-time-order', '.location-events', '.eventRecordObject', 'asc');
                 MIRAI.main.setTimelineParentHeight();
-                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start);
+                MIRAI.main.arrangeEvents('.location-events', '.eventRecordObject',list_time_start,
+                    list_time_end_15,list_time_end_16);
                 MIRAI.main.arrangeStartTime();
             },
             error: function(error) {
@@ -164,10 +166,11 @@ if(!MIRAI.main) {MIRAI.main = {};}
         })
     }
 
-    func.arrangeEvents = function (sel, elem,list_time) {
+    func.arrangeEvents = function (sel, elem,list_time, list_time_end_15, list_time_end_16) {
         var selector1 = $(sel);
-        var timeUnitPx = 90;
-
+        var timeUnitPx = 180;
+        var max_time_end_15 = Math.max(...list_time_end_15)
+        var max_time_end_16 = Math.max(...list_time_end_16)
         selector1.each(function (index, sel) {
             var $element = $(sel).children(elem);
             var end_time_temp= Math.min(...list_time);
@@ -182,13 +185,48 @@ if(!MIRAI.main) {MIRAI.main = {};}
 
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                     end_time_temp = endTimeDec;
+                    console.log($($element[obj]).attr("data-start-date"))
+                    if($($element[obj]).attr("data-start-date") === "15"){
+                        if(parseInt(endTimeDec) === max_time_end_15){
+                            var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2
+                            $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
+
+                        }
+
+                    }
+                    else {
+                        if(parseInt(endTimeDec) === max_time_end_16)
+                        {
+                            var margin_bottom = ((max_time_end_16 + 1) - endTimeDec) * timeUnitPx+2
+                            $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
+
+                        }
+                    }
                 }
                 else{
                     var startTimeDec = moment.duration($($element[obj]).attr("data-starttime")).asHours();
                     var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
                     var margin = (startTimeDec - end_time_temp) * timeUnitPx;
                     var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
+                    console.log($($element[obj]).attr("data-start-date"))
+                    if($($element[obj]).attr("data-start-date") === "15"){
+                        if(parseInt(endTimeDec) === max_time_end_15){
+                            var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2
+                            console.log(margin_bottom)
+                            $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
 
+                        }
+
+                    }
+                    else {
+                        if(parseInt(endTimeDec) === max_time_end_16)
+                        {
+                            var margin_bottom = ((max_time_end_16 + 1) - endTimeDec) * timeUnitPx+2
+                            console.log(margin_bottom)
+                            $($element[obj]).css({"margin-bottom": margin_bottom + "px"});
+
+                        }
+                    }
                     end_time_temp = endTimeDec
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                 }
@@ -351,7 +389,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
         </div>
     </div>`;
 
-    func.backgroundBorderTemplate = `<div style="height: 89px;width: 249px; display: flex;flex-direction: row;
+    func.backgroundBorderTemplate = `<div style="height: 179px;width: 249px; display: flex;flex-direction: row;
         border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`;
 
     func.backgroundBorderHeigTemplate = `
@@ -365,7 +403,9 @@ if(!MIRAI.main) {MIRAI.main = {};}
      data-startTime="{2}" 
      data-endTime="{3}" 
      data-description="{4}"
-     data-time-order="{5}">
+     data-time-order="{5}"
+     data-start-date="{8}"
+     >
         <p class="time" data-time="">{1}</p>
         <br/>
         <h4 class="name-event">{0}</h4>
@@ -425,19 +465,27 @@ $(document).ready(function() {
 
 
         target.off("scroll").scrollTop(source.scrollTop());
-
+        $('.scroll-border').scrollTop( source.scrollTop() );
         timeout = setTimeout(function() {
             target.on("scroll", callback);
         }, 100);
     });
-    $('.scroll_time, .schedule').on("scroll", function() {
+    /*$('.schedule').on("scroll", function() {
         var scrollT = $(this).scrollTop();
+        console.log("schedule: "+scrollT)
             $('.scroll-border').scrollTop( scrollT );
     })
+    $('.scroll_time').on("scroll", function() {
+        var scrollT = $(this).scrollTop();
+        console.log("time: "+scrollT)
+        $('.scroll-border').scrollTop( scrollT );
+    })*/
+
     $('.horizontal_scroll_border').on("scroll", function() {
         var scrollL = $(this).scrollLeft()
         $('.scroll-border').scrollLeft( scrollL );
     })
+
     const width = (window.outerWidth-16) + "px"
     $('.background-border').css({"resize": "both",'width':"calc( "+width+" - 5%)","margin-left":"5%"})
     $( window ).resize(function() {
