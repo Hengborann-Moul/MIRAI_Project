@@ -185,6 +185,23 @@ if(!MIRAI.main) {MIRAI.main = {};}
 
                     $($element[obj]).css({"height": height + "px", "margin-top": margin + "px"});
                     end_time_temp = endTimeDec;
+                    var line = parseInt((height -60)/20)
+                    if(height<50){
+                        $($element[obj]).addClass("short-time")
+                    }
+                    else{
+                        if(line < 0){
+                            line = -line
+                        }
+                        if(line === 0){
+                            line = 1
+                        }
+                        $($element[obj]).addClass("line-limit")
+                        $($element[obj].getElementsByTagName('h4')[0]).css({"-webkit-line-clamp":line+""})
+                    }
+
+
+
                     if($($element[obj]).attr("data-start-date") === "15"){
                         if(parseInt(endTimeDec) === max_time_end_15){
                             var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2
@@ -205,6 +222,25 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     var endTimeDec = moment.duration($($element[obj]).attr("data-endtime")).asHours();
                     var margin = (startTimeDec - end_time_temp) * timeUnitPx;
                     var height = (endTimeDec - startTimeDec) * timeUnitPx -21;
+
+                    var line = parseInt((height -60)/20)
+
+                    if(height<50){
+                        $($element[obj]).addClass("short-time")
+                    }else{
+                        if(line < 0){
+                            line = -line
+                        }
+                        if(line === 0){
+                            line = 1
+                        }
+                        $($element[obj]).addClass("line-limit")
+                        //console.log($element[obj].getElementsByTagName('h4')[0])
+                        $($element[obj].getElementsByTagName('h4')[0]).css({"-webkit-line-clamp":line+""})
+                    }
+
+
+
                     if($($element[obj]).attr("data-start-date") === "15"){
                         if(parseInt(endTimeDec) === max_time_end_15){
                             var margin_bottom = ((max_time_end_15+1) - endTimeDec)*timeUnitPx+2;
@@ -479,16 +515,7 @@ $(document).ready(function() {
             target.on("scroll", callback);
         }, 100);
     });
-    /*$('.schedule').on("scroll", function() {
-        var scrollT = $(this).scrollTop();
-        console.log("schedule: "+scrollT)
-            $('.scroll-border').scrollTop( scrollT );
-    })
-    $('.scroll_time').on("scroll", function() {
-        var scrollT = $(this).scrollTop();
-        console.log("time: "+scrollT)
-        $('.scroll-border').scrollTop( scrollT );
-    })*/
+
 
     $('.horizontal_scroll_border').on("scroll", function() {
         var scrollL = $(this).scrollLeft()

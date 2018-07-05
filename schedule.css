@@ -240,6 +240,11 @@ body.showModal {
         position: relative;
         width: 100%;
     }
+
+    .timeline-element p {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+    }
 }
 
 
@@ -271,7 +276,7 @@ body.showModal {
 }
 .time-line-item{
     overflow-y: auto;
-    height: 450px
+    height: 450px;
 }
 .time-line-title{
     height: 75.5px;
@@ -328,6 +333,25 @@ html::-webkit-scrollbar,.time-line-item.time::-webkit-scrollbar,
     margin-top: 75.5px;
     display:-webkit-inline-box;
     flex-direction: row;overflow-y: scroll
+}
+
+.short-time h4{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: -5px;
+}
+.short-time p{
+    display: inline;
+}
+.short-time{
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+.line-limit h4{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
 }
 
 
