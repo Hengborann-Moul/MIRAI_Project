@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cd6033d1-4edd-4a81-8c57-f022730f9504" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/schedule.css" beforeDir="false" afterPath="$PROJECT_DIR$/schedule.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule.js" beforeDir="false" afterPath="$PROJECT_DIR$/schedule.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schedule.js___jb_tmp___" beforeDir="false" />
-    </list>
+    <list default="true" id="cd6033d1-4edd-4a81-8c57-f022730f9504" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -36,8 +32,8 @@
       <file leaf-file-name="schedule.css" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/schedule.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="338" column="14" selection-start-line="338" selection-start-column="14" selection-end-line="338" selection-end-column="14" />
+            <state relative-caret-position="207">
+              <caret line="340" column="1" lean-forward="true" selection-start-line="340" selection-start-column="1" selection-end-line="340" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -137,12 +133,12 @@
       <workItem from="1530671195265" duration="486000" />
       <workItem from="1530676345498" duration="37000" />
       <workItem from="1530693495576" duration="4535000" />
-      <workItem from="1530713778093" duration="3909000" />
+      <workItem from="1530713778093" duration="4093000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25560000" />
+    <option name="totallyTimeSpent" value="25744000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="40" width="1366" height="670" extended-state="0" />
@@ -369,8 +365,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/schedule.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="338" column="14" selection-start-line="338" selection-start-column="14" selection-end-line="338" selection-end-column="14" />
+        <state relative-caret-position="207">
+          <caret line="340" column="1" lean-forward="true" selection-start-line="340" selection-start-column="1" selection-end-line="340" selection-end-column="1" />
         </state>
       </provider>
     </entry>
