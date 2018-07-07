@@ -98,7 +98,7 @@
  .table-flex {
      display: flex;
      flex-direction: column;
-     width: 250px;
+     width: 200px;
      #border-right: 0.5px solid #ebebeb;
      padding: 0px 0px;
      #min-height: 450px;

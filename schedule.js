@@ -73,8 +73,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                         );
                         if(!list_location.hasOwnProperty(locationName)){
 
-                            list_location[locationName] = count
-                            count++
+                            list_location[locationName] = count;
+                            count++;
                         }
 
                         location_header = $.parseHTML(location_header);
@@ -131,8 +131,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     $(`li.eventOn${15}th .time-line-item`).append(timelineElement);
                 }
 
-                for(var k = 0 ; k < count ; k++){
-                    $('.border'+15).append("<div style='width: 250px'>"+html_border+"</div>");
+                for(var k = 0 ; k < (count - 1) ; k++){
+                    $('.border'+15).append("<div style='width: 200px'>"+html_border+"</div>");
                 }
 
                 html_border="";
@@ -147,8 +147,8 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     $(`li.eventOn${16}th .time-line-item`).append(timelineElement);
                 }
 
-                for(var k = 0 ; k < count ; k++){
-                    $('.border'+16).append("<div style='width: 250px'>"+html_border+"</div>");
+                for(var k = 0 ; k < (count - 1) ; k++){
+                    $('.border'+16).append("<div style='width: 200px'>"+html_border+"</div>");
                 }
 
 
@@ -270,15 +270,24 @@ if(!MIRAI.main) {MIRAI.main = {};}
             var rootElem = $(elem).children();
             var startTime = undefined;
             var crush = undefined;
+            var special_Div = [];
             rootElem.map(function(child_index, child_elem) {
                 if($(child_elem).attr("data-starttime") === startTime){
-                    $(elem).css({"display": "flex"});
-                    $(child_elem).css({"margin-top": $(crush).css("margin-top")});
+                    // $(elem).css({"display": "flex"});
+                    // $(child_elem).css({"margin-top": $(crush).css("margin-top")});
+                    if(!special_Div.includes(crush)){
+                        special_Div.push(crush);
+                        $(crush).wrapAll('<div class="special" style="display:flex;"></div>');
+                    }
+                    special_Div.push(child_elem);
+                    $('.special').append(child_elem);
+                    $(child_elem).css({'margin-top': $(special_Div[0]).css("margin-top")});
                 }else{
                     startTime = $(child_elem).attr("data-starttime");
                     crush = child_elem;
                 }
             });
+             
         });
     }
 
@@ -434,7 +443,7 @@ if(!MIRAI.main) {MIRAI.main = {};}
         </div>
     </div>`;
 
-    func.backgroundBorderTemplate = `<div style="height: 179px;width: 249px; display: flex;flex-direction: row;
+    func.backgroundBorderTemplate = `<div style="height: 179px;width: 199px; display: flex;flex-direction: row;
         border: 1px solid lightgray;border-left:0px;border-top:0px"></div>`;
 
     func.backgroundBorderHeigTemplate = `
@@ -501,7 +510,6 @@ $(document).ready(function() {
     var timeout;
 
     $('.time, .schedule').on("scroll", function callback() {
-
         clearTimeout(timeout);
 
         // get the used elements
@@ -517,16 +525,21 @@ $(document).ready(function() {
     });
 
 
-    $('.horizontal_scroll_border').on("scroll", function() {
-        var scrollL = $(this).scrollLeft()
+    $('.dragscroll').on("scroll", function() {
+        var scrollL = $(this).scrollLeft();
+        console.log($(this).scrollTop());
         $('.scroll-border').scrollLeft( scrollL );
-    })
+    });
 
-    const width = (window.outerWidth-16) + "px"
-    $('.background-border').css({"resize": "both",'width':"calc( "+width+" - 5%)","margin-left":"5%"})
+    const width = (window.outerWidth-16) + "px";
+    var timeWidth =  $(".time-line-item")[0].clientWidth;
+
+    $('.background-border').css({"resize": "both",'width':"95%", "left": timeWidth + "px"});
     $( window ).resize(function() {
-        const width = (window.outerWidth-16) + "px"
-        $('.background-border').css({"resize": "both",'width':"calc( "+width+" - 5%)","margin-left":"5%"})
-    })
+        const width = (window.outerWidth-16) + "px";
+        var timeWidth =  $(".time-line-item")[0].clientWidth;
+        $('.background-border').css({"resize": "both",'width':"95%","left": timeWidth + "px"});
+        return;
+    });
 
 });
