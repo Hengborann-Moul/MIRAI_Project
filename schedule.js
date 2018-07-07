@@ -273,8 +273,6 @@ if(!MIRAI.main) {MIRAI.main = {};}
             var special_Div = [];
             rootElem.map(function(child_index, child_elem) {
                 if($(child_elem).attr("data-starttime") === startTime){
-                    // $(elem).css({"display": "flex"});
-                    // $(child_elem).css({"margin-top": $(crush).css("margin-top")});
                     if(!special_Div.includes(crush)){
                         special_Div.push(crush);
                         $(crush).wrapAll('<div class="special" style="display:flex;"></div>');
@@ -287,7 +285,9 @@ if(!MIRAI.main) {MIRAI.main = {};}
                     crush = child_elem;
                 }
             });
-             
+            special_Div.map(function(el, i){
+                $(el).css({"width": 100/(special_Div.length) + "%", "margin-right": "1px"});
+            });
         });
     }
 
@@ -527,7 +527,6 @@ $(document).ready(function() {
 
     $('.dragscroll').on("scroll", function() {
         var scrollL = $(this).scrollLeft();
-        console.log($(this).scrollTop());
         $('.scroll-border').scrollLeft( scrollL );
     });
 

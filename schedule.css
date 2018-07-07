@@ -90,6 +90,7 @@
      width: 95%;
      height: 525.5px;
      overflow-x: scroll;
+     overflow-y: hidden;
      cursor: -webkit-grab;
      cursor: grab;
      cursor : -o-grab;
@@ -317,12 +318,12 @@ p.time{
 }
 
 html::-webkit-scrollbar,.time-line-item.time::-webkit-scrollbar,
-.schedule-wrapper.dragscroll::-webkit-scrollbar,
+.schedule-wrapper::-webkit-scrollbar,
 .scroll-border::-webkit-scrollbar
 {
     display: none;
 }
-.time-line-item.time,.schedule-wrapper.dragscroll{
+.time-line-item.time,.schedule-wrapper{
     -ms-overflow-style: none;
 }
 
